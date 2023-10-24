@@ -1,0 +1,57 @@
+{% extends "master.html" %}
+{% block content %}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Email</th>
+            <th scope="col">Username</th>
+            <th scope="col">Group</th>
+            <th scope="col">Admin</th>
+            <th scope="col">Created</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <th scope="row">{{ user.id }}</th>
+                <td>{{ user.email }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.group }}</td>
+                {% if user.is_superuser %}
+                    <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled" checked
+                               disabled></td>
+                {% else %}
+                    <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled" disabled></td>
+                {% endif %}
+                <td>{{ user.date_joined }}</td>
+
+                {% if request.user.is_superuser %}
+                    <td>
+                        <button type="button" class="btn btn-outline-secondary"><a
+                                class="link-offset-2 link-underline link-underline-opacity-0"
+                                href="{% url 'user_edit' user.pk %}">Edit</a></button>
+                        {% if user != request.user %}
+                            <button type="button" class="btn btn-outline-danger"><a
+                                    class="link-offset-2 link-underline link-underline-opacity-0"
+                                    href="{% url 'user_delete' user.pk %}">Delete</a></button>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    {% if user == request.user %}
+                        <td>
+                            <button type="button" class="btn btn-outline-secondary"><a
+                                    class="link-offset-2 link-underline link-underline-opacity-0"
+                                    href="{% url 'user_edit' user.pk %}">Edit</a></button>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

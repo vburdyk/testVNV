@@ -1,0 +1,45 @@
+{% extends "master.html" %}
+{% block content %}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for group in groups %}
+            <tr>
+                <th scope="row">{{ group.id }}</th>
+                <td>{{ group.name }}</td>
+                <td>
+                    <ul>
+                        {% for permission in group.permissions.all %}
+                            <li>{{ permission.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                {% if request.user.is_superuser %}
+                    <td>
+                        <button type="button" class="btn btn-outline-secondary"><a
+                                class="link-offset-2 link-underline link-underline-opacity-0"
+                                href="#">Edit</a></button>
+                        {% if not group.members.all %}
+                            <button type="button" class="btn btn-outline-danger"><a
+                                    class="link-offset-2 link-underline link-underline-opacity-0"
+                                    href="{% url 'group_delete' group.id %}">Delete</a></button>
+                        {% else %}
+                            <button type="button" class="btn btn-outline-danger" disabled>Delete</button>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
